@@ -1,0 +1,49 @@
+Step 1. Clone repository using GIT
+
+$ git clone https://github.com/udacity/nd064_course_1.git
+
+Step 2 - List files in the current directory
+
+$ ls -d */
+
+Step 3 - Navigate to nd064_course_1.git exercises
+
+cd nd064_course_1
+cd exercises
+cd python-helloworld
+
+Step 4 - I right clicked the app.py file and ran it in Pycharm so I could edit the file according
+to the instructions.  I saved this new edited file as app1.py.
+
+Step 5 - Navigate back to the file.Run the app1.py application in Flask
+$ Flask run
+
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/status")
+def healthcheck():
+    response = app.response_class(
+    response=json.dumps({"result":"OK - healthy"}),
+    status = 200,
+    mimetype='application/json'
+)
+    app.logger.info('Status request successful')
+    return response
+
+@app.route("/metrics")
+def metrics():
+    response = app.response_class(
+    response=json.dumps({"status":"success","code":0,"data":{"UserCount":140,"UserCountActive":23}}),
+    status = 200,
+    mimetype='application/json'
+)
+    app.logger.info('Metrics request successful')
+    return response
+
+@app.route("/")
+def hello():
+    return "Hello World!"
+
+if __name__ == "__main__":
+    app.run(host='127.0.0.1', port=5000, debug=True)
