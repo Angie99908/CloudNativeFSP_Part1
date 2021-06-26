@@ -1,0 +1,158 @@
+Lesson 3 Concpts
+
+
+VM(Virtual Machines) - were the main mechanism to host applications in the past.
+ - Encapsulate code, configuation files & dependencies needed to run the application
+ - Composed of an OS with pre-installed packages & libraries
+ - Applications use the OS resources during execution
+
+Hypervisor - manages a vm or multiple vm's using physical servers.
+
+containers - allow for the virtualization of operating systems which optimizes the available infrastructure
+  - multiple vm's on a hypervisor are replaced by multiple containers on a single host operating system
+  - containers are created and executed by a container mgmt tool such as Docker
+ 
+Three Components of a Docker System - Dockerfiles, Docker images, & Docker Registries
+
+Example Docker file:
+
+# set the base image - since we're running a Python application a Python base image is used
+
+FROM python 3.8
+
+# set a key value label for the Docker image
+
+LABEL maintainer="Katie Gamanji"
+
+# Defines the working directory within the container
+
+COPY ./app
+
+
+WORKDIR /app
+
+# fun commands within the container
+# for example, invoke a PIP command
+# to install dependencies defined in the requirements.txt file
+
+RUN pip install -r requirements.txt
+# command to run on container start
+# for example, start the "app.py" application
+
+CMD ["python", "app.py"]
+
+Docker image - a read-only template that enables the creation of a runnable instance of an application.
+
+ - provides the execution environment for the application
+ - provides any code, config files, and dependencies
+
+# build an image
+# OPTIONS - optional; define extra configuration
+# PATH - required; sets the location of the Dockerfile and any reference files
+
+docker build[OPTIONS] PATH
+
+# Where OPTIONS can be
+
+-t, --tag - set the name and tag of the image
+-f, --file - set the name of the Dockerfile
+--build-arg - set the build-time variables
+
+# Find all valid options for this command
+
+docker build --help
+
+# build an image using the Dockerfile from the current directory
+ docker build -t python-helloworld .
+
+# build an image using the Dockerfile from the 'lesson1/python-app' directory
+docker build -t python-helloworld lesson1/python-app
+
+Docker file - a set of instructions to create a docker image
+
+# execute an image
+# OPTIONS - optional; define extra configuration
+# IMAGE - required; provides the name of the image to be executed
+# COMMAND and ARGS - optional; instruct the container to run specific commands
+
+docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+
+# Where options can be:
+-d, --detach - run in the background
+-p, --publish - expose container port to the host
+-it - start an interactive shell
+
+# Find all valid options for this command
+docker run --help
+
+Note - to access the spplication in a browser, the Docker port needs to bind to a port on the host or local machine,
+in this case 5111.  http://127.0.0.1.5111
+
+The 5000 is the container port the application is listening to for incoming requests.
+
+# run the 'python-helloworld' image, in detached mode and expose it on port '5111'
+docker run -d -p 5111:5000 python-helloworld
+
+# to retrieve the docker container logs use the docker logs {{ CONTAINER_ID}} command.
+Example:
+
+docker logs 95173091eb5e
+
+## Example output from a Flask application
+* Serving Flask app "app" (lazy loading)
+_________________________________________________________________________________________
+PRE-DEFINED INSTRUCTIONS TO CONSTRUCT A DOCKER FILE
+
+FROM - to set the base image
+RUN - to execute a command
+COPY & ADD - to copy files from host to the container
+CMD - to set the default command to execute when the container starts
+EXPOSE - to expose an application port
+
+The final step in packaging an application using Docker is to store and distribute.
+
+Public Docker Image Registries
+
+- DockerHub
+- Harbor
+- Google Container Registry
+
+Use team hosted private registries for images which should remain private.
+
+Tag the image before pushing it to a Docker registry or it will be allocated a non-human readable image ID during the build stage:
+
+-t or --tag
+
+A defined tag provides:
+- Version control
+- Human-readable format
+- Contains registry repository, image name, version
+
+docker tag syntax:
+
+# tag an image
+# SOURCE_IMAGE[:TAG]
+# TARGET_IMAGE[:TAG]
+
+docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+
+Example:
+
+# tag the 'python-helloworld' image, to be pushed
+# in the 'pixelpotato' repository, with the 'python-helloworld' image name
+# and version 'v1.0.0'
+
+docker tag python_helloworld pixelpotato/python-helloworld:v1.0.0
+
+After tagging the image, it can be pushed to the registry:
+
+docker push pixelpotato/python-helloworld:v1.0.0
+
+Review Terms:
+
+Dockerfile - instructions used to create Docker images
+Docker image - template used to create a runnable instance of an application, a read-only template
+Docker registry - a central mechanism to store and distribute Docker images
+
+UDACITY 6-26-2021
+
