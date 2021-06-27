@@ -1,0 +1,17 @@
+## How to create a Dockerfile in Ubuntu
+
+## A Dockerfile is a text file.  The text file contains instructions to build a docker image.
+
+Step 1 - Create a file named Dockerfile
+ - $ mkdir Dockerfiles # If you want a folder in your directory named Dockerfiles, 
+ - $ touch Dockerfile # creates the blank text file within the current directory
+
+Step 2 - Edit the Dockerfile
+ - $ vim Dockerfile # Add the Docker commands to the text file using vim or vi, then :wq or :wq! to write and quit
+
+Step 3 - Check the contents of the Dockerfile
+ - $ cat Dockerfile # will show you the contents of the text file you just created
+
+Thank you to:
+
+https://www.youtube.com/watch?v=LQjaJINkQXY
